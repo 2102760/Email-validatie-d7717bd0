@@ -51,16 +51,23 @@ $token = $_SESSION['token'];
         Email: <input type="email" name="email"><br/>
         <input type="hidden" value="red" name="color">
         Bericht: <textarea name="text" minlength="4"></textarea><br/>
-        <?php if (userIsAdmin($conn)) {
+        <?php
+        if (userIsAdmin($conn)) {
             echo "<input type\"hidden\" name=\"admin\" value=" . $_COOKIE['admin'] . "\">";
         } ?>
-        <input type="hidden" name="token" value="<?php echo $token; ?>">
+        <input type="hidden" name="token" value="<?php
+        echo $token; ?>">
         <input type="submit">
     </form>
     <hr/>
     <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            die('Doe lief en pas het niet aan!');
+        }
+
         $email = $_POST['email'];
+
         $text = $_POST['text'];
         $admin = isset($_POST['admin']) ? 1 : 0;
         if (userIsAdmin($conn)) {
